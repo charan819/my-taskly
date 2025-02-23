@@ -13,7 +13,7 @@ public class SubscriptionPlan {
 
     @Id
     @Column(name = "subscription_plan_id")
-    private UUID subscriptionPlanId;
+    private String subscriptionPlanId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,unique = true)
@@ -50,11 +50,11 @@ public class SubscriptionPlan {
         this.durationInDays = durationInDays;
     }
 
-    public UUID getSubscriptionPlanId() {
+    public String getSubscriptionPlanId() {
         return subscriptionPlanId;
     }
 
-    public void setSubscriptionPlanId(UUID subscriptionPlanId) {
+    public void setSubscriptionPlanId(String subscriptionPlanId) {
         this.subscriptionPlanId = subscriptionPlanId;
     }
 
