@@ -38,6 +38,9 @@ public class Users {
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<ProjectAssignments> projectAssignments;
 
+    @OneToOne(mappedBy = "users",cascade = CascadeType.ALL,orphanRemoval = true)
+    private OneTimePassword oneTimePassword;
+
     public Users() {
         super();
     }
