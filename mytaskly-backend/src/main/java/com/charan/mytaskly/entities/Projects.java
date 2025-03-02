@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Table(name = "projects")
@@ -28,10 +27,10 @@ public class Projects {
     @JsonBackReference
     private Organizations organization;
 
-    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<Sprints> sprints;
 
-    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<ProjectAssignments> projectAssignments;
 
     public Projects() {

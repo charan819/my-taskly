@@ -4,6 +4,7 @@ import com.charan.mytaskly.entities.Users;
 import com.charan.mytaskly.repository.UsersRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,6 +51,7 @@ public class JwtTokenHelper {
         return jwt_token;
     }
 
+
     public Claims getClaimsFromToken(String token){
         String secret = environment.getProperty("JWT_SECRET_KEY");
         Claims claims = null;
@@ -75,7 +77,7 @@ public class JwtTokenHelper {
     }
 
     public String getUsernameFromToken(String token){
-        return getClaimsFromToken(token).get("username").toString();
+        return getClaimsFromToken(token).get("email").toString();
     }
 
     public Boolean validateToken(String token,UserDetails userDetails){
