@@ -1,9 +1,6 @@
 package com.charan.mytaskly.services;
 
-import com.charan.mytaskly.entities.Organizations;
-import com.charan.mytaskly.entities.Projects;
-import com.charan.mytaskly.entities.Subscriptions;
-import com.charan.mytaskly.entities.Users;
+import com.charan.mytaskly.entities.*;
 import com.charan.mytaskly.exception.AlreadyExistsException;
 import com.charan.mytaskly.exception.ResourceNotFoundException;
 import com.charan.mytaskly.exception.SubscriptionExpiryException;
@@ -59,7 +56,6 @@ public class OrganizationsServiceImpl implements OrganizationsService{
         newOrganization.setOrganizationsId(UUID.randomUUID().toString());
         newOrganization.setOrganizationName(organizationName);
         newOrganization.setOwner(user);
-        newOrganization.setSubscriptions(subscription);
         organizationsRepository.save(newOrganization);
 
         return "Organization added successfully!";

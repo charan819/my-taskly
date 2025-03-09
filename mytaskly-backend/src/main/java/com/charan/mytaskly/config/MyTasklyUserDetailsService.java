@@ -1,13 +1,13 @@
 package com.charan.mytaskly.config;
 
 import com.charan.mytaskly.entities.Users;
+import com.charan.mytaskly.exception.ResourceNotFoundException;
 import com.charan.mytaskly.repository.UsersRepository;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +22,9 @@ public class MyTasklyUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws ResourceNotFoundException {
         Users userDetails = usersRepository.findByEmail(username).orElseThrow(
-                ()-> new UsernameNotFoundException("User does not exist.")
+                ()-> new ResourceNotFoundException("No Account exists.. Please try to register first")
         );
 
         List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(userDetails.getRole().toString()));
