@@ -25,7 +25,7 @@ public class IssuesController {
     }
 
     @GetMapping("/{issueId}")
-    public ResponseEntity<Issues> getIssueByIssueId(@PathVariable("issueId") String issueId){
+    public ResponseEntity<IssuesDto> getIssueByIssueId(@PathVariable("issueId") String issueId){
         return ResponseEntity.ok(issuesService.getIssueByIssueId(issueId));
     }
 
@@ -40,10 +40,18 @@ public class IssuesController {
     }
 
     @PutMapping("/updateIssue/{issueId}")
-    public ResponseEntity<String> updateAllIssueDetailsByIssueId(@PathVariable("issueId") String issueId,@RequestBody Issues issues){
-        return ResponseEntity.ok(issuesService.updateAllIssueDetailsByIssueId(issueId,issues));
+    public ResponseEntity<String> updateAllIssueDetailsByIssueId(@PathVariable("issueId") String issueId,@RequestBody IssuesDto issuesDto){
+        return ResponseEntity.ok(issuesService.updateAllIssueDetailsByIssueId(issueId,issuesDto));
     }
 
+    @PutMapping("/{issueId}/priority/{issueStatus}")
+    public ResponseEntity<String> updateIssuePriorityByIssueId(@PathVariable("issueId") String issueId,@PathVariable("issueStatus") String issueStatus){
+        return ResponseEntity.ok(issuesService.updateIssueStatusByIssueId(issueId,issueStatus));
+    }
 
+    @DeleteMapping("/delete/{issueId}")
+    public ResponseEntity<String> deleteIssueByIssueId(@PathVariable String issueId){
+        return ResponseEntity.ok(issuesService.deleteIssueByIssueId(issueId));
+    }
 
 }
