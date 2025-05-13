@@ -1,6 +1,8 @@
 package com.charan.mytaskly.controllers;
 
+import com.charan.mytaskly.dto.SprintsDto;
 import com.charan.mytaskly.entities.Sprints;
+import com.charan.mytaskly.exception.ResourceNotFoundException;
 import com.charan.mytaskly.services.SprintsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +35,7 @@ public class SprintsController {
     }
 
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<Sprints>> getAllSprintsByProjectId(@PathVariable("projectId") String projectId){
+    public ResponseEntity<List<SprintsDto>> getAllSprintsByProjectId(@PathVariable("projectId") String projectId) {
         return ResponseEntity.ok(sprintsService.getAllSprintsByProjectId(projectId));
     }
 
@@ -50,6 +52,11 @@ public class SprintsController {
     @PatchMapping("/{sprintId}/status")
     public ResponseEntity<String> updateSprintStatus(@PathVariable("sprintId") String sprintId,@RequestParam String sprintStatus){
         return ResponseEntity.ok(sprintsService.updateSprintStatus(sprintId,sprintStatus));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<SprintsDto>> getAllSprintsByUserId(@PathVariable String userId){
+        return ResponseEntity.ok(sprintsService.getAllSprintsByUserId(userId));
     }
 
 }

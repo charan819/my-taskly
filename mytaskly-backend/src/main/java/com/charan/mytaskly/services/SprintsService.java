@@ -1,6 +1,8 @@
 package com.charan.mytaskly.services;
 
+import com.charan.mytaskly.dto.SprintsDto;
 import com.charan.mytaskly.entities.Sprints;
+import com.charan.mytaskly.exception.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -11,11 +13,13 @@ public interface SprintsService {
 
     Sprints getSprintBySprintId(String sprintId);
 
-    List<Sprints> getAllSprintsByProjectId(String projectId);
+    List<SprintsDto> getAllSprintsByProjectId(String projectId);
 
     String updateSprintBySprintId(String sprintId, Sprints sprints);
 
     String deleteSprintBySprintId(String sprintId);
 
     String updateSprintStatus(String sprintId,String sprintStatus);
+
+    List<SprintsDto> getAllSprintsByUserId(String userId);
 }

@@ -1,5 +1,7 @@
 package com.charan.mytaskly.services;
 
+import com.charan.mytaskly.dto.IssuesDto;
+import com.charan.mytaskly.dto.SprintsDto;
 import com.charan.mytaskly.entities.Projects;
 import com.charan.mytaskly.entities.SprintStatus;
 import com.charan.mytaskly.entities.Sprints;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class SprintsServiceImpl implements SprintsService{
@@ -41,12 +44,7 @@ public class SprintsServiceImpl implements SprintsService{
 
     @Override
     public List<Sprints> getAllSprints() {
-        List<Sprints> sprintsList = sprintsRepository.findAll();
-        if(sprintsList.isEmpty()){
-            throw new ResourceNotFoundException("No Sprints Found!!");
-        }
-
-        return sprintsList;
+        return sprintsRepository.findAll();
     }
 
     @Override
@@ -57,21 +55,39 @@ public class SprintsServiceImpl implements SprintsService{
     }
 
     @Override
-    public List<Sprints> getAllSprintsByProjectId(String projectId) {
+    public List<SprintsDto> getAllSprintsByProjectId(String projectId) {
         List<Sprints> sprintsList = sprintsRepository.getAllSprintsByProjectId(projectId);
-        if(sprintsList.isEmpty()){
-            throw new ResourceNotFoundException("No Sprints Found!!");
-        }
-        return sprintsList;
+
+        return sprintsList.stream().map(sprint -> {
+            List<IssuesDto> issuesDtoList = sprint.getIssues().stream().map(issue ->
+                    new IssuesDto(
+                            issue.getIssueId(),
+                            issue.getTitle(),
+                            issue.getDescription(),
+                            issue.getIssueStatus(),
+                            issue.getIssuePriority(),
+                            issue.getAssignee() != null ? issue.getAssignee().getEmail() : null,
+                            issue.getReporter() != null ? issue.getReporter().getEmail() : null
+                    )
+            ).collect(Collectors.toList());
+
+            return new SprintsDto(
+                    sprint.getSprintId(),
+                    sprint.getSprintName(),
+                    sprint.getStartDate(),
+                    sprint.getEndDate(),
+                    sprint.getSprintStatus(),
+                    issuesDtoList
+            );
+        }).collect(Collectors.toList());
     }
+
 
     @Override
     public String updateSprintBySprintId(String sprintId, Sprints sprints) {
         Sprints existingSprints = sprintsRepository.findById(sprintId).orElseThrow(
                 ()-> new ResourceNotFoundException("No Sprints Found!!")
         );
-
-        existingSprints.setSprintStatus(sprints.getSprintStatus());
         existingSprints.setSprintName(sprints.getSprintName());
         existingSprints.setStartDate(sprints.getStartDate());
         existingSprints.setEndDate(sprints.getEndDate());
@@ -97,6 +113,38 @@ public class SprintsServiceImpl implements SprintsService{
         sprints.setSprintStatus(SprintStatus.valueOf(sprintStatus));
         sprintsRepository.save(sprints);
         return "Sprint Status Updated Successfully!!";
+    }
+
+    @Override
+    public List<SprintsDto> getAllSprintsByUserId(String userId) {
+        List<Sprints> sprintsList = sprintsRepository.findByIssuesAssigneeUserId(userId);
+
+        return sprintsList.stream()
+                .map(sprint -> {
+                    // Convert issues to IssuesDto
+                    List<IssuesDto> issuesDtoList = sprint.getIssues().stream()
+                            .filter(issue -> issue.getAssignee() != null && userId.equals(issue.getAssignee().getUserId()))
+                            .map(issue -> new IssuesDto(
+                                    issue.getIssueId(),
+                                    issue.getTitle(),
+                                    issue.getDescription(),
+                                    issue.getIssueStatus(),
+                                    issue.getIssuePriority(),
+                                    issue.getAssignee() != null ? issue.getAssignee().getEmail() : null,
+                                    issue.getReporter() != null ? issue.getReporter().getEmail() : null
+                            ))
+                            .collect(Collectors.toList());
+
+                    return new SprintsDto(
+                            sprint.getSprintId(),
+                            sprint.getSprintName(),
+                            sprint.getStartDate(),
+                            sprint.getEndDate(),
+                            sprint.getSprintStatus(),
+                            issuesDtoList
+                    );
+                })
+                .collect(Collectors.toList());
     }
 
 
