@@ -22,6 +22,7 @@ public class Issues {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "issue_status", length = 20)
     private IssueStatus issueStatus;
 
     @Enumerated(EnumType.STRING)
@@ -48,10 +49,6 @@ public class Issues {
     @OneToMany(mappedBy = "issues", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comments> comments;
-
-    @OneToMany(mappedBy = "issues", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "attachment-issues")
-    private List<Attachments> attachments;
 
     public Issues() {
         super();
@@ -143,13 +140,5 @@ public class Issues {
 
     public void setComments(List<Comments> comments) {
         this.comments = comments;
-    }
-
-    public List<Attachments> getAttachments() {
-        return attachments;
-    }
-
-    public void setAttachments(List<Attachments> attachments) {
-        this.attachments = attachments;
     }
 }
